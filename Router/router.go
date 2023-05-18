@@ -8,10 +8,11 @@ import (
 
 func Route() *mux.Router {
 	router := mux.NewRouter()
-	router.HandleFunc("/api/websites", Controller.GetAllWebsitesJSON).Methods("GET")
-	router.HandleFunc("/api/website", Controller.CreateWebsite).Methods("POST")
-	router.HandleFunc("/api/website/{id}", Controller.MarkAsChecked).Methods("PUT")
-	router.HandleFunc("/api/website/{id}", Controller.DeleteOneWebsite).Methods("DELETE")
-	router.HandleFunc("/api/websites", Controller.DeleteAllWebsite).Methods("DELETE")
+	router.HandleFunc("/api/codes/{self}", Controller.GetAllWebsitesJSON).Methods("GET")
+	router.HandleFunc("/api/selfs", Controller.GetAllWebsitesJSON).Methods("GET")
+	router.HandleFunc("/api/login", Controller.CreateWebsite).Methods("POST")
+	router.HandleFunc("/api/signup", Controller.CreateWebsite).Methods("POST")
+	router.HandleFunc("/api/sell/{self}+{code}", Controller.MarkAsChecked).Methods("PUT")
+	router.HandleFunc("/api/codes/{id}", Controller.DeleteOneWebsite).Methods("DELETE")
 	return router
 }
