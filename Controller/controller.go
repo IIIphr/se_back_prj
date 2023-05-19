@@ -106,36 +106,42 @@ func CreateCoupon(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/x-www-form-urlencode")
 	w.Header().Set("Allow-Control-Allow-Methods", "POST")
 	var coupon Model.Coupon
+	_ = json.NewDecoder(r.Body).Decode(&coupon)
 	insertNewCoupon(coupon)
 }
 func CreateUser(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/x-www-form-urlencode")
 	w.Header().Set("Allow-Control-Allow-Methods", "POST")
 	var user Model.User
+	_ = json.NewDecoder(r.Body).Decode(&user)
 	insertNewUser(user)
 }
 func CreateAdmin(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/x-www-form-urlencode")
 	w.Header().Set("Allow-Control-Allow-Methods", "POST")
 	var admin Model.Admin
+	_ = json.NewDecoder(r.Body).Decode(&admin)
 	insertNewCAdmin(admin)
 }
 func CreateCanteen(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/x-www-form-urlencode")
 	w.Header().Set("Allow-Control-Allow-Methods", "POST")
 	var canteen Model.Canteen
+	_ = json.NewDecoder(r.Body).Decode(&canteen)
 	insertNewCanteen(canteen)
 }
 func CreateUniversity(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/x-www-form-urlencode")
 	w.Header().Set("Allow-Control-Allow-Methods", "POST")
 	var university Model.University
+	_ = json.NewDecoder(r.Body).Decode(&university)
 	insertNewUniversity(university)
 }
 func CreateReport(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/x-www-form-urlencode")
 	w.Header().Set("Allow-Control-Allow-Methods", "POST")
 	var report Model.Report
+	_ = json.NewDecoder(r.Body).Decode(&report)
 	insertNewReport(report)
 }
 
