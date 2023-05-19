@@ -14,13 +14,13 @@ type User struct {
 	CurrentMoney int                `json:"currentmoney" bson:"currentmoney,omitempty"`
 }
 type Report struct {
-	ID             primitive.ObjectID `json:"_id,omitempty" bson:"_idreport,omitempty"`
+	ID             primitive.ObjectID `json:"_id,omitempty" bson:"_id,omitempty"`
 	Reporter       string             `json:"reporter" bson:"reporter,omitempty"`
 	Reportee       string             `json:"reportee" bson:"reportee,omitempty"`
 	ReportedCoupon Coupon             `json:"reportedcoupon" bson:"reportedcoupon,omitempty"`
 }
 type Coupon struct {
-	ID         int64  `json:"_id,omitempty" bson:"_idcoupon,omitempty"`
+	ID         int64  `json:"_id,omitempty" bson:"_id,omitempty"`
 	Price      int    `json:"price" bson:"price,omitempty"`
 	StudentId  string `json:"studentid" bson:"studentid,omitempty"`
 	University string `json:"universityid" bson:"universityid,omitempty"`
@@ -45,7 +45,7 @@ type CurStatus struct {
 	Stat string `json:"stat" bson:"stat"`
 }
 type DeletingCoupon struct {
-	ID                int64  `json:"_id,omitempty" bson:"_idcoupon,omitempty"`
+	ID                int64  `json:"_id,omitempty" bson:"_id,omitempty"`
 	BuyerStudentID    string `json:"buyersid" bson:"buyersid"`
 	BuyerUniversityID string `json:"buyeruid" bson:"buyeruid"`
 }
