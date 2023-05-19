@@ -68,14 +68,12 @@ func CreateCoupon(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/x-www-form-urlencode")
 	w.Header().Set("Allow-Control-Allow-Methods", "POST")
 	var coupon Model.Coupon
-	_ = json.NewDecoder(r.Body).Decode(&coupon)
 	insertNewCoupon(coupon)
 }
 func CreateUser(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/x-www-form-urlencode")
 	w.Header().Set("Allow-Control-Allow-Methods", "POST")
 	var user Model.User
-	_ = json.NewDecoder(r.Body).Decode(&user)
 	insertNewUser(user)
 }
 func DeleteOneCoupon(w http.ResponseWriter, r *http.Request) {
@@ -90,7 +88,9 @@ func CheckLogin(w http.ResponseWriter, r *http.Request) {
 	var user Model.User
 	err := json.NewDecoder(r.Body).Decode(&user)
 	if err != nil {
-		http.Error(w, "Invalid request body", http.StatusBadRequest)
+		var stat Model.CurStatus
+		stat.Stat = "INVALID"
+		json.NewEncoder(w).Encode(stat)
 		return
 	}
 	filter := bson.M{"studentid": user.StudentId, "password": user.Password}
@@ -160,3 +160,5 @@ func FindCodes(w http.ResponseWriter, r *http.Request) {
 	response = append(response, results[4])
 	json.NewEncoder(w).Encode(response)
 }
+
+//TODO login user model sent to front, change current money of user.
