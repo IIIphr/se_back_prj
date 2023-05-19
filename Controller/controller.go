@@ -53,6 +53,15 @@ func insertNewCoupon(coupon Model.Coupon) {
 	}
 	fmt.Println("inserted coupon with id ", inserted.InsertedID, " into db")
 }
+func updateUserMoney(user Model.User, money int) {
+	filter := bson.M{"_id": user.ID}
+	update := bson.M{"$set": bson.M{"currentmoney": money}}
+	result, err := userCollection.UpdateOne(context.Background(), filter, update)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println("updated ", result.ModifiedCount)
+}
 func deleteId(ID int64, buyersid string, buyeruid string) Model.CurStatus {
 	id := ID
 	filter := bson.M{"_id": id}
@@ -69,11 +78,13 @@ func deleteId(ID int64, buyersid string, buyeruid string) Model.CurStatus {
 	var res Model.User
 	filter2 := bson.M{"studentid": buyersid, "universityid": buyeruid}
 	userCollection.FindOne(context.Background(), filter2).Decode(&res)
-	res.CurrentMoney -= result.Price
+	//res.CurrentMoney -= result.Price
+	updateUserMoney(res, res.CurrentMoney-result.Price)
 	var res2 Model.User
 	filter3 := bson.M{"studentid": result.StudentId, "universityid": result.University}
 	userCollection.FindOne(context.Background(), filter3).Decode(&res2)
-	res2.CurrentMoney += result.Price
+	//res2.CurrentMoney += result.Price
+	updateUserMoney(res2, res2.CurrentMoney+result.Price)
 	deleteResult, err := couponCollection.DeleteOne(context.Background(), filter)
 	if err != nil {
 		log.Fatal(err)
