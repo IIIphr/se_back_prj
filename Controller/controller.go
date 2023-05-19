@@ -53,7 +53,7 @@ func insertNewCoupon(coupon Model.Coupon) {
 }
 func deleteId(ID primitive.ObjectID, buyersid string, buyeruid string) Model.CurStatus {
 	id := ID
-	filter := bson.M{"_idcoupon": id}
+	filter := bson.M{"_id": id}
 	var result Model.Coupon
 	err := couponCollection.FindOne(context.Background(), filter).Decode(&result)
 	if err == mongo.ErrNoDocuments {
