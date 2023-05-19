@@ -51,7 +51,7 @@ func insertNewCoupon(coupon Model.Coupon) {
 	}
 	fmt.Println("inserted coupon with id ", inserted.InsertedID, " into db")
 }
-func deleteId(ID primitive.ObjectID, buyersid string, buyeruid string) Model.CurStatus {
+func deleteId(ID int64, buyersid string, buyeruid string) Model.CurStatus {
 	id := ID
 	filter := bson.M{"_id": id}
 	var result Model.Coupon
