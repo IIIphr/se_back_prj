@@ -31,14 +31,11 @@ func init() {
 	userCollection = client.Database("food").Collection("users")
 	adminCollection = client.Database("food").Collection("admins")
 	couponCollection = client.Database("food").Collection("coupons")
-	canteenCollection := client.Database("food").Collection("canteens")
-	reportCollection := client.Database("food").Collection("reports")
-	universityCollection := client.Database("food").Collection("universities")
-	_ = canteenCollection
-	_ = reportCollection
-	_ = universityCollection
+	canteenCollection = client.Database("food").Collection("canteens")
+	reportCollection = client.Database("food").Collection("reports")
+	universityCollection = client.Database("food").Collection("universities")
 	fmt.Println("collection is ready")
-	fmt.Println(universityCollection.Name())
+	fmt.Println(universityCollection)
 }
 func insertNewUser(user Model.User) {
 	inserted, err := userCollection.InsertOne(context.Background(), user)
