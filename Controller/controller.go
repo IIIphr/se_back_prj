@@ -37,7 +37,8 @@ func init() {
 	_ = canteenCollection
 	_ = reportCollection
 	_ = universityCollection
-	fmt.Println("collection is ready", universityCollection)
+	fmt.Println("collection is ready")
+	fmt.Println(universityCollection.Name())
 }
 func insertNewUser(user Model.User) {
 	inserted, err := userCollection.InsertOne(context.Background(), user)
