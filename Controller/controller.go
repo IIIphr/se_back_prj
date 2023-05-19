@@ -51,8 +51,8 @@ func insertNewCoupon(coupon Model.Coupon) {
 	}
 	fmt.Println("inserted coupon with id ", inserted.InsertedID, " into db")
 }
-func deleteId(delete Model.DeletingCoupon) Model.CurStatus {
-	id, _ := primitive.ObjectIDFromHex(string(delete.ID))
+func deleteId(ID primitive.ObjectID, buyersid string, buyeruid string) Model.CurStatus {
+	id := ID
 	filter := bson.M{"_idcoupon": id}
 	var result Model.Coupon
 	err := couponCollection.FindOne(context.Background(), filter).Decode(&result)
@@ -64,8 +64,14 @@ func deleteId(delete Model.DeletingCoupon) Model.CurStatus {
 	} else if err != nil {
 		log.Fatal(err)
 	}
-	result.Owner.CurrentMoney += result.Price
-	delete.Buyer.CurrentMoney -= result.Price
+	var res Model.User
+	filter2 := bson.M{"studentid": buyersid, "universityid": buyeruid}
+	userCollection.FindOne(context.Background(), filter2).Decode(&res)
+	res.CurrentMoney -= result.Price
+	var res2 Model.User
+	filter3 := bson.M{"studentid": result.StudentId, "universityid": result.University}
+	userCollection.FindOne(context.Background(), filter3).Decode(&res2)
+	res2.CurrentMoney += result.Price
 	fmt.Println("delete count was ", result)
 	var stat Model.CurStatus
 	stat.Stat = "FOUND"
@@ -102,7 +108,7 @@ func insertNewReport(report Model.Report) {
 
 func CreateCoupon(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/x-www-form-urlencode")
-	w.Header().Set("Allow-Control-Allow-Methods", "POST")
+	w.Header().Set("Allow-Control-Allow-Methods", "PUT")
 	var coupon Model.Coupon
 	_ = json.NewDecoder(r.Body).Decode(&coupon)
 	insertNewCoupon(coupon)
@@ -154,7 +160,7 @@ func DeleteOneCoupon(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(stat)
 		return
 	}
-	json.NewEncoder(w).Encode(deleteId(delete))
+	json.NewEncoder(w).Encode(deleteId(delete.ID, delete.BuyerStudentID, delete.BuyerUniversityID))
 }
 
 func CheckLogin(w http.ResponseWriter, r *http.Request) {

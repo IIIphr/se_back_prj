@@ -20,12 +20,13 @@ type Report struct {
 	ReportedCoupon Coupon             `json:"reportedcoupon" bson:"reportedcoupon,omitempty"`
 }
 type Coupon struct {
-	ID       primitive.ObjectID `json:"_idcoupon,omitempty" bson:"_idcoupon,omitempty"`
-	Price    int                `json:"price" bson:"price,omitempty"`
-	Owner    User               `json:"user" bson:"user,omitempty"`
-	Canteen  string             `json:"canteen" bson:"canteen,omitempty"`
-	Code     string             `json:"code" bson:"code,omitempty"`
-	FoodName string             `json:"foodname" bson:"foodname,omitempty"`
+	ID         primitive.ObjectID `json:"_idcoupon,omitempty" bson:"_idcoupon,omitempty"`
+	Price      int                `json:"price" bson:"price,omitempty"`
+	StudentId  string             `json:"studentid" bson:"studentid,omitempty"`
+	University string             `json:"universityid" bson:"universityid,omitempty"`
+	Canteen    string             `json:"canteen" bson:"canteen,omitempty"`
+	Code       string             `json:"code" bson:"code,omitempty"`
+	FoodName   string             `json:"foodname" bson:"foodname,omitempty"`
 }
 type University struct {
 	ID string `json:"universityid" bson:"universityid"`
@@ -44,6 +45,7 @@ type CurStatus struct {
 	Stat string `json:"stat" bson:"stat"`
 }
 type DeletingCoupon struct {
-	ID    string `json:"_idcoupon,omitempty" bson:"_idcoupon,omitempty"`
-	Buyer User   `json:"buyer" bson:"buyer"`
+	ID                primitive.ObjectID `json:"_idcoupon,omitempty" bson:"_idcoupon,omitempty"`
+	BuyerStudentID    string             `json:"buyersid" bson:"buyersid"`
+	BuyerUniversityID string             `json:"buyeruid" bson:"buyeruid"`
 }
