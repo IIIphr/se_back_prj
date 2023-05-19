@@ -24,7 +24,7 @@ type Coupon struct {
 	Price      int    `json:"price" bson:"price,omitempty"`
 	StudentId  string `json:"studentid" bson:"studentid,omitempty"`
 	University string `json:"universityid" bson:"universityid,omitempty"`
-	Canteen    string `json:"canteen" bson:"canteen,omitempty"`
+	CanteenID  string `json:"canteenid" bson:"canteenid,omitempty"`
 	Code       string `json:"code" bson:"code,omitempty"`
 	FoodName   string `json:"foodname" bson:"foodname,omitempty"`
 }

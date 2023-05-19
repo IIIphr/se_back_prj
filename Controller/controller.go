@@ -217,7 +217,7 @@ func CheckLogin(w http.ResponseWriter, r *http.Request) {
 func FindCodes(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/x-www-form-urlencode")
 	w.Header().Set("Allow-Control-Allow-Methods", "POST")
-	var self string
+	var self Model.Canteen
 	err := json.NewDecoder(r.Body).Decode(&self)
 	if err != nil {
 		var stat Model.CurStatus
@@ -228,7 +228,7 @@ func FindCodes(w http.ResponseWriter, r *http.Request) {
 	pipeline := []bson.M{
 		{
 			"$match": bson.M{
-				"canteen": self,
+				"canteen": self.ID,
 			},
 		},
 		{
