@@ -43,3 +43,7 @@ type Admin struct {
 type CurStatus struct {
 	Stat string `json:"stat" bson:"stat"`
 }
+type DeletingCoupon struct {
+	ID    string `json:"_idcoupon,omitempty" bson:"_idcoupon,omitempty"`
+	Buyer User   `json:"buyer" bson:"buyer"`
+}
