@@ -72,7 +72,11 @@ func deleteId(ID primitive.ObjectID, buyersid string, buyeruid string) Model.Cur
 	filter3 := bson.M{"studentid": result.StudentId, "universityid": result.University}
 	userCollection.FindOne(context.Background(), filter3).Decode(&res2)
 	res2.CurrentMoney += result.Price
-	fmt.Println("delete count was ", result)
+	deleteResult, err := couponCollection.DeleteOne(context.Background(), filter)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println("delete was ", result, deleteResult)
 	var stat Model.CurStatus
 	stat.Stat = "FOUND"
 	return stat
@@ -108,6 +112,7 @@ func insertNewReport(report Model.Report) {
 
 func CreateCoupon(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/x-www-form-urlencode")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Allow-Control-Allow-Methods", "PUT")
 	var coupon Model.Coupon
 	_ = json.NewDecoder(r.Body).Decode(&coupon)
@@ -115,6 +120,7 @@ func CreateCoupon(w http.ResponseWriter, r *http.Request) {
 }
 func CreateUser(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/x-www-form-urlencode")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Allow-Control-Allow-Methods", "POST")
 	var user Model.User
 	_ = json.NewDecoder(r.Body).Decode(&user)
@@ -122,6 +128,7 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 }
 func CreateAdmin(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/x-www-form-urlencode")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Allow-Control-Allow-Methods", "POST")
 	var admin Model.Admin
 	_ = json.NewDecoder(r.Body).Decode(&admin)
@@ -129,6 +136,7 @@ func CreateAdmin(w http.ResponseWriter, r *http.Request) {
 }
 func CreateCanteen(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/x-www-form-urlencode")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Allow-Control-Allow-Methods", "POST")
 	var canteen Model.Canteen
 	_ = json.NewDecoder(r.Body).Decode(&canteen)
@@ -136,6 +144,7 @@ func CreateCanteen(w http.ResponseWriter, r *http.Request) {
 }
 func CreateUniversity(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/x-www-form-urlencode")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Allow-Control-Allow-Methods", "POST")
 	var university Model.University
 	_ = json.NewDecoder(r.Body).Decode(&university)
@@ -143,6 +152,7 @@ func CreateUniversity(w http.ResponseWriter, r *http.Request) {
 }
 func CreateReport(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/x-www-form-urlencode")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Allow-Control-Allow-Methods", "POST")
 	var report Model.Report
 	_ = json.NewDecoder(r.Body).Decode(&report)
@@ -151,6 +161,7 @@ func CreateReport(w http.ResponseWriter, r *http.Request) {
 
 func DeleteOneCoupon(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/x-www-form-urlencode")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Allow-Control-Allow-Methods", "DELETE")
 	var delete Model.DeletingCoupon
 	err := json.NewDecoder(r.Body).Decode(&delete)
@@ -165,6 +176,7 @@ func DeleteOneCoupon(w http.ResponseWriter, r *http.Request) {
 
 func CheckLogin(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/x-www-form-urlencode")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Allow-Control-Allow-Methods", "POST")
 	var user Model.User
 	err := json.NewDecoder(r.Body).Decode(&user)
