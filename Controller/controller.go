@@ -217,6 +217,7 @@ func CheckLogin(w http.ResponseWriter, r *http.Request) {
 
 func FindCodes(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/x-www-form-urlencode")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Allow-Control-Allow-Methods", "POST")
 	var self Model.Canteen
 	err := json.NewDecoder(r.Body).Decode(&self)
