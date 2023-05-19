@@ -6,10 +6,11 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"se_back_prj/Manager"
 	"se_back_prj/Model"
 
 	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/bson/primitive"
+	//"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -45,6 +46,7 @@ func insertNewUser(user Model.User) {
 	fmt.Println("inserted user with id ", inserted.InsertedID, " into db")
 }
 func insertNewCoupon(coupon Model.Coupon) {
+	coupon.ID = Manager.GetNewCouponId()
 	inserted, err := couponCollection.InsertOne(context.Background(), coupon)
 	if err != nil {
 		log.Fatal(err)
