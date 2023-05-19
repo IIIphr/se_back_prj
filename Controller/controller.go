@@ -127,7 +127,7 @@ func insertNewReport(report Model.Report) {
 func CreateCoupon(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/x-www-form-urlencode")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Header().Set("Allow-Control-Allow-Methods", "PUT")
+	w.Header().Set("Allow-Control-Allow-Methods", "POST")
 	var coupon Model.Coupon
 	_ = json.NewDecoder(r.Body).Decode(&coupon)
 	insertNewCoupon(coupon)
