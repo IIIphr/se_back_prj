@@ -4,15 +4,15 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"log"
+	"net/http"
+	"se_back_prj/Model"
+
 	"github.com/gorilla/mux"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
-	"log"
-	"net/http"
-	"se_back_prj/Model"
-	"sort"
 )
 
 const connectionString = "mongodb://localhost:27017"
@@ -39,21 +39,29 @@ func insertNewUser(user Model.User) {
 	}
 	fmt.Println("inserted user with id ", inserted.InsertedID, " into db")
 }
-func insertNewCoupon(ocupon Model.Coupon) {
+func insertNewCoupon(coupon Model.Coupon) {
 	inserted, err := collection.InsertOne(context.Background(), coupon)
 	if err != nil {
 		log.Fatal(err)
 	}
 	fmt.Println("inserted coupon with id ", inserted.InsertedID, " into db")
 }
-func deleteId(val string) {
+func deleteId(val string) Model.CurStatus {
 	id, _ := primitive.ObjectIDFromHex(val)
-	filter := bson.M{"_id": id}
+	filter := bson.M{"_idcoupon": id}
 	deleteCount, err := collection.DeleteOne(context.Background(), filter)
 	if err != nil {
+		if err == mongo.ErrNoDocuments {
+			var stat Model.CurStatus
+			stat.Stat = "Coupon Not Found"
+			return stat
+		}
 		log.Fatal(err)
 	}
 	fmt.Println("delete count was ", deleteCount.DeletedCount)
+	var stat Model.CurStatus
+	stat.Stat = "FOUND"
+	return stat
 }
 
 func CreateCoupon(w http.ResponseWriter, r *http.Request) {
@@ -62,7 +70,6 @@ func CreateCoupon(w http.ResponseWriter, r *http.Request) {
 	var coupon Model.Coupon
 	_ = json.NewDecoder(r.Body).Decode(&coupon)
 	insertNewCoupon(coupon)
-	json.NewEncoder(w).Encode(coupon)
 }
 func CreateUser(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/x-www-form-urlencode")
@@ -70,14 +77,12 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 	var user Model.User
 	_ = json.NewDecoder(r.Body).Decode(&user)
 	insertNewUser(user)
-	json.NewEncoder(w).Encode(user)
 }
 func DeleteOneCoupon(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/x-www-form-urlencode")
 	w.Header().Set("Allow-Control-Allow-Methods", "DELETE")
 	params := mux.Vars(r)
-	deleteId(params["id"])
-	json.NewEncoder(w).Encode(params["id"])
+	json.NewEncoder(w).Encode(deleteId(params["id"]))
 }
 func CheckLogin(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/x-www-form-urlencode")
@@ -93,14 +98,16 @@ func CheckLogin(w http.ResponseWriter, r *http.Request) {
 	err = collection.FindOne(context.Background(), filter).Decode(&result)
 	if err == mongo.ErrNoDocuments {
 		// User not found
-		http.Error(w, "Invalid username or password", http.StatusUnauthorized)
+		var stat Model.CurStatus
+		stat.Stat = "NOT OK"
+		json.NewEncoder(w).Encode(stat)
 		return
 	} else if err != nil {
 		log.Fatal(err)
 	}
-
-	// User found
-	w.WriteHeader(http.StatusOK)
+	var stat Model.CurStatus
+	stat.Stat = "OK"
+	json.NewEncoder(w).Encode(stat)
 }
 func FindCodes(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/x-www-form-urlencode")
@@ -108,32 +115,48 @@ func FindCodes(w http.ResponseWriter, r *http.Request) {
 	var self string
 	err := json.NewDecoder(r.Body).Decode(&self)
 	if err != nil {
-		http.Error(w, "Invalid request body", http.StatusBadRequest)
+		var stat Model.CurStatus
+		stat.Stat = "INVALID"
+		json.NewEncoder(w).Encode(stat)
 		return
 	}
-	filter := bson.M{"self": self}
-	cur, err := collection.Find(context.Background(), filter)
+	pipeline := []bson.M{
+		{
+			"$match": bson.M{
+				"self": self,
+			},
+		},
+		{
+			"$sort": bson.M{
+				"price": 1,
+			},
+		},
+	}
+	cursor, err := collection.Aggregate(context.Background(), pipeline)
 	if err != nil {
 		log.Fatal(err)
 	}
+	defer cursor.Close(context.Background())
 
-	sort.Slice(cur, func(i, j int) bool {
-		return cur[i].Price < cur[j].Price
-	})
-	var selfs []Model.Self
-	for cur.Next(context.Background()) {
-		var self Model.Self
-		err := cur.Decode(&self)
+	// Iterate over the results
+	var results []Model.Coupon
+	for cursor.Next(context.Background()) {
+		var coupon Model.Coupon
+		err := cursor.Decode(&coupon)
 		if err != nil {
 			log.Fatal(err)
 		}
-		selfs = append(selfs, self)
-	}
-	if err := cur.Err(); err != nil {
-		log.Fatal(err)
+		results = append(results, coupon)
 	}
 
-	// Return the users as JSON response
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(selfs)
+	if err := cursor.Err(); err != nil {
+		log.Fatal(err)
+	}
+	var response []Model.Coupon
+	response = append(response, results[0])
+	response = append(response, results[1])
+	response = append(response, results[2])
+	response = append(response, results[3])
+	response = append(response, results[4])
+	json.NewEncoder(w).Encode(response)
 }

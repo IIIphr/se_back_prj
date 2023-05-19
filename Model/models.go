@@ -21,8 +21,12 @@ type Report struct {
 	ReportedCoupon Coupon `json:"reportedcoupon" bson:"reportedcoupon,omitempty"`
 }
 type Coupon struct {
-	Number int    `json:"number" bson:"number,omitempty"`
-	Price  int    `json:"price" bson:"price,omitempty"`
-	Owner  User   `json:"user" bson:"user,omitempty"`
-	Self   string `json:"self" bson:"self,omitempty"`
+	ID     primitive.ObjectID `json:"_idcoupon,omitempty" bson:"_idcoupon,omitempty"`
+	Number int                `json:"number" bson:"number,omitempty"`
+	Price  int                `json:"price" bson:"price,omitempty"`
+	Owner  User               `json:"user" bson:"user,omitempty"`
+	Self   string             `json:"self" bson:"self,omitempty"`
+}
+type CurStatus struct {
+	Stat string `json:"stat" bson:"stat"`
 }
