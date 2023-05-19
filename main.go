@@ -22,32 +22,32 @@ func main() {
 	canteenCollection := client.Database("food").Collection("canteens")
 	reportCollection := client.Database("food").Collection("reports")
 	universityCollection := client.Database("food").Collection("universities")
-	admin:= bson.D{{"adminID","1"},{"username","rootadmin"},{"password","root"},{"Name","Arash"}}
+	admin:= bson.D{{"adminid","1"},{"username","rootadmin"},{"password","root"},{"name","Arash"}}
 	result, err := adminCollection.InsertOne(context.TODO(), admin)
 	if err != nil {
         panic(err)
 	}
-	user:= bson.D{{"StudentID","98243001"},{"UniversityID","1"},{"FirstName","Sepehr"},{"LastName","Ebrahimi"},{"password","123"},{"credit",500}}
+	user:= bson.D{{"studentid","98243001"},{"universityid","1"},{"FirstName","Sepehr"},{"LastName","Ebrahimi"},{"Password","123"},{"CurrentMoney",500}}
 	result, err:= userCollection.InsertOne(context.TODO(), user)
 	if err != nil{
 		panic(err)
 	}
-	report:= bson.D{{"reportID","1"},{"couponID","1",}{"StudentID","98243001"}}
+	report:= bson.D{{"reportedcoupon","1",},{"reporter","98243001"},{"reportee","98243002"}}
 	result, err:= reportCollection.InsertOne(context.TODO(), report)
 	if err != nil{
 		panic(err)
 	}
-	university:=bson.D{{"UniversityID","1"}}
+	university:=bson.D{{"universityid","1"}}
 	result, err:= universityCollection.InsertOne(context.TODO(), university)
 	if err != nil{
 		panic(err)
 	}
-	coupon:=bson.D{{"CouponID","1"},{"Code","54321"},{"Price",2},{"CanteenID","2"},{"FoodName","قورمه سبزی"}}
+	coupon:=bson.D{{"code","54321"},{"price",2},{"canteen","2"},{"foodname","قورمه سبزی"},{"Owner",user}}
 	result, err:= couponCollection.InsertOne(context.TODO(), coupon)
 	if err != nil{
 		panic(err)
 	}
-	canteen:= bson.D{{"CanteenID","2"}}
+	canteen:= bson.D{{"canteenid","2"},{"universityid","1"}}
 	result, err:= canteenCollection.InsertOne(context.TODO(), canteen)
 	if err != nil{
 		panic(err)
