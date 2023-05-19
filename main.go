@@ -16,4 +16,11 @@ func main() {
 	r := Router.Route()
 	log.Fatal(http.ListenAndServe(":4000", r))
 	fmt.Println("Listening at 4000")
+	usersCollection := client.Database("food").Collection("users")
+	adminCollection := client.Database("food").Collection("admins")
+	couponCollection := client.Database("food").Collection("coupons")
+	canteenCollection := client.Database("food").Collection("canteens")
+	reportCollection := client.Database("food").Collection("reports")
+	universityCollection := client.Database("food").Collection("universities")
+
 }
