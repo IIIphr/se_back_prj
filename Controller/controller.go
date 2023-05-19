@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"se_back_prj/Manager"
 	"se_back_prj/Model"
+	"sort"
 
 	"go.mongodb.org/mongo-driver/bson"
 	//"go.mongodb.org/mongo-driver/bson/primitive"
@@ -225,45 +226,32 @@ func FindCodes(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(stat)
 		return
 	}
-	pipeline := []bson.M{
-		{
-			"$match": bson.M{
-				"canteen": self.ID,
-			},
-		},
-		{
-			"$sort": bson.M{
-				"price": 1,
-			},
-		},
-	}
-	cursor, err := couponCollection.Aggregate(context.Background(), pipeline)
+	filter := bson.M{"canteenid": self.ID}
+	cur, err := couponCollection.Find(context.Background(), filter)
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer cursor.Close(context.Background())
-
-	// Iterate over the results
-	var results []Model.Coupon
-	for cursor.Next(context.Background()) {
+	var coupons []Model.Coupon
+	for cur.Next(context.Background()) {
 		var coupon Model.Coupon
-		err := cursor.Decode(&coupon)
+		err := cur.Decode(&coupon)
 		if err != nil {
 			log.Fatal(err)
 		}
-		results = append(results, coupon)
+		coupons = append(coupons, coupon)
 	}
-
-	if err := cursor.Err(); err != nil {
-		log.Fatal(err)
-	}
+	sort.Sort(ByPrice(coupons))
 	var response []Model.Coupon
-	response = append(response, results[0])
-	response = append(response, results[1])
-	response = append(response, results[2])
-	response = append(response, results[3])
-	response = append(response, results[4])
+	response = append(response, coupons[0])
+	response = append(response, coupons[1])
+	response = append(response, coupons[2])
+	response = append(response, coupons[3])
+	response = append(response, coupons[4])
 	json.NewEncoder(w).Encode(response)
 }
 
-//TODO login user model sent to front, change current money of user.
+type ByPrice []Model.Coupon
+
+func (a ByPrice) Len() int           { return len(a) }
+func (a ByPrice) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
+func (a ByPrice) Less(i, j int) bool { return a[i].Price < a[j].Price }
