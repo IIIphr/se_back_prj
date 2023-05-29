@@ -22,6 +22,7 @@ var couponCollection *mongo.Collection
 var canteenCollection *mongo.Collection
 var reportCollection *mongo.Collection
 var universityCollection *mongo.Collection
+var CounterCollection *mongo.Collection
 
 func init() {
 	clientOption := options.Client().ApplyURI("mongodb://localhost:27017")
@@ -36,6 +37,7 @@ func init() {
 	canteenCollection = client.Database("food").Collection("canteens")
 	reportCollection = client.Database("food").Collection("reports")
 	universityCollection = client.Database("food").Collection("universities")
+	CounterCollection = client.Database("food").Collection("counter")
 	fmt.Println("collection is ready")
 	fmt.Println(universityCollection)
 }
