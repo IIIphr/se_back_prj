@@ -51,3 +51,6 @@ type DeletingCoupon struct {
 	BuyerStudentID    string `json:"buyersid" bson:"buyersid"`
 	BuyerUniversityID string `json:"buyeruid" bson:"buyeruid"`
 }
+type UserMoney struct {
+	CurrentMoney int `json:"currentmoney" bson:"currentmoney,omitempty"`
+}

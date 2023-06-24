@@ -48,6 +48,30 @@ func insertNewUser(user Model.User) {
 	}
 	fmt.Println("inserted user with id ", inserted.InsertedID, " into db")
 }
+func updateName(user Model.User) {
+	filter := bson.M{"_id": user.ID}
+	update := bson.M{"$set": bson.M{"firstname": user.FirstName}}
+	result, err := userCollection.UpdateOne(context.Background(), filter, update)
+	update2 := bson.M{"$set": bson.M{"firstname": user.FirstName}}
+	result2, err2 := userCollection.UpdateOne(context.Background(), filter, update2)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println("updated ", result.ModifiedCount)
+	if err2 != nil {
+		log.Fatal(err2)
+	}
+	fmt.Println("updated ", result2.ModifiedCount)
+}
+func updateUserPassword(user Model.User) {
+	filter := bson.M{"_id": user.ID}
+	update := bson.M{"$set": bson.M{"password": user.Password}}
+	result, err := userCollection.UpdateOne(context.Background(), filter, update)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println("updated ", result.ModifiedCount)
+}
 func insertNewCoupon(coupon Model.Coupon) {
 	coupon.ID = Manager.GetNewCouponId()
 	inserted, err := couponCollection.InsertOne(context.Background(), coupon)
@@ -139,7 +163,23 @@ func insertNewReport(report Model.Report) {
 	}
 	fmt.Println("inserted report with id ", inserted.InsertedID, " into db")
 }
+func getUserMoney(user Model.User) Model.UserMoney {
+	var result Model.UserMoney
 
+	filter := bson.M{"studentid": user.StudentId, "password": user.Password}
+	var result2 Model.User
+	_ = userCollection.FindOne(context.Background(), filter).Decode(&result2)
+	result.CurrentMoney = result2.CurrentMoney
+	return result
+}
+func UserMoney(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/x-www-form-urlencode")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Allow-Control-Allow-Methods", "POST")
+	var user Model.User
+	_ = json.NewDecoder(r.Body).Decode(&user)
+	json.NewEncoder(w).Encode(getUserMoney(user))
+}
 func CreateCoupon(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/x-www-form-urlencode")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
@@ -155,6 +195,16 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 	var user Model.User
 	_ = json.NewDecoder(r.Body).Decode(&user)
 	insertNewUser(user)
+}
+
+func UpdateUser(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/x-www-form-urlencode")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Allow-Control-Allow-Methods", "POST")
+	var user Model.User
+	_ = json.NewDecoder(r.Body).Decode(&user)
+	updateName(user)
+	updateUserPassword(user)
 }
 func CreateAdmin(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/x-www-form-urlencode")
