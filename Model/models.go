@@ -54,3 +54,7 @@ type DeletingCoupon struct {
 type UserMoney struct {
 	CurrentMoney int `json:"currentmoney" bson:"currentmoney,omitempty"`
 }
+type UpdateMoney struct {
+	Money int  `json:"money" bson:"money,omitempty"`
+	User  User `json:"user" bson:"user,omitempty"`
+}

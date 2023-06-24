@@ -172,6 +172,15 @@ func getUserMoney(user Model.User) Model.UserMoney {
 	result.CurrentMoney = result2.CurrentMoney
 	return result
 }
+func UpdateMoney(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/x-www-form-urlencode")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Allow-Control-Allow-Methods", "POST")
+	var user Model.UpdateMoney
+	_ = json.NewDecoder(r.Body).Decode(&user)
+	var money = getUserMoney(user.User).CurrentMoney
+	updateUserMoney(user.User, user.Money+money)
+}
 func UserMoney(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/x-www-form-urlencode")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
