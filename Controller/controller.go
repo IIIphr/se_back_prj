@@ -88,6 +88,20 @@ func deleteId(ID int64, buyersid string, buyeruid string) Model.CurStatus {
 	userCollection.FindOne(context.Background(), filter3).Decode(&res2)
 	//res2.CurrentMoney += result.Price
 	updateUserMoney(res2, res2.CurrentMoney+result.Price)
+
+	filter4 := bson.M{"studentid": buyersid, "universityid": buyeruid}
+	update := bson.M{
+		"$push": bson.M{
+			"coupons": result,
+		},
+	}
+	updateResult, err := userCollection.UpdateOne(context.TODO(), filter4, update)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+	log.Printf("Matched %v document(s) and updated %v document(s).\n", updateResult.MatchedCount, updateResult.ModifiedCount)
+
 	deleteResult, err := couponCollection.DeleteOne(context.Background(), filter)
 	if err != nil {
 		log.Fatal(err)

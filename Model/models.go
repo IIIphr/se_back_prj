@@ -12,6 +12,8 @@ type User struct {
 	University   string             `json:"universityid" bson:"universityid,omitempty"`
 	Password     string             `json:"password" bson:"password,omitempty"`
 	CurrentMoney int                `json:"currentmoney" bson:"currentmoney,omitempty"`
+
+	Coupons []Coupon `json:"coupons" bson:"coupons,omitempty"`
 }
 type Report struct {
 	ID             primitive.ObjectID `json:"_id,omitempty" bson:"_id,omitempty"`
