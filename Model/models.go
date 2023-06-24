@@ -58,3 +58,6 @@ type UpdateMoney struct {
 	Money int  `json:"money" bson:"money,omitempty"`
 	User  User `json:"user" bson:"user,omitempty"`
 }
+type Feedback struct {
+	Message string `json:"message" bson:"message"`
+}

@@ -23,6 +23,7 @@ var canteenCollection *mongo.Collection
 var reportCollection *mongo.Collection
 var universityCollection *mongo.Collection
 var CounterCollection *mongo.Collection
+var feedbackCollenction *mongo.Collection
 
 func init() {
 	clientOption := options.Client().ApplyURI("mongodb://localhost:27017")
@@ -38,6 +39,7 @@ func init() {
 	reportCollection = client.Database("food").Collection("reports")
 	universityCollection = client.Database("food").Collection("universities")
 	CounterCollection = client.Database("food").Collection("counter")
+	feedbackCollenction = client.Database("food").Collection("counter")
 	fmt.Println("collection is ready")
 	fmt.Println(universityCollection)
 }
@@ -171,6 +173,21 @@ func getUserMoney(user Model.User) Model.UserMoney {
 	_ = userCollection.FindOne(context.Background(), filter).Decode(&result2)
 	result.CurrentMoney = result2.CurrentMoney
 	return result
+}
+func insertFeedback(feedback Model.Feedback) {
+	inserted, err := feedbackCollenction.InsertOne(context.Background(), feedback)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println("inserted feedback with id ", inserted.InsertedID, " into db")
+}
+func GiveFeedback(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/x-www-form-urlencode")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Allow-Control-Allow-Methods", "POST")
+	var feedback Model.Feedback
+	_ = json.NewDecoder(r.Body).Decode(&feedback)
+	insertFeedback(feedback)
 }
 func UpdateMoney(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/x-www-form-urlencode")
