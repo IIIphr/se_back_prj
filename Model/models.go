@@ -66,3 +66,6 @@ type MoneyTransfer struct {
 	User2 User `json:"user2" bson:"user2"`
 	Money int  `json:"money" bson:"money"`
 }
+type UserHistory struct {
+	Coupons []Coupon `json:"coupons" bson:"coupons,omitempty"`
+}

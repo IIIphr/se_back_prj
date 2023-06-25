@@ -193,6 +193,23 @@ func moneyTranster(m Model.MoneyTransfer) {
 	//res2.CurrentMoney += result.Price
 	updateUserMoney(res2, res2.CurrentMoney+m.Money)
 }
+func getHistory(user Model.User) Model.UserHistory {
+	var result Model.UserHistory
+
+	filter := bson.M{"studentid": user.StudentId, "universityid": user.University}
+	var result2 Model.User
+	_ = userCollection.FindOne(context.Background(), filter).Decode(&result2)
+	result.Coupons = result2.Coupons
+	return result
+}
+func History(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/x-www-form-urlencode")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Allow-Control-Allow-Methods", "POST")
+	var m Model.User
+	_ = json.NewDecoder(r.Body).Decode(&m)
+	json.NewEncoder(w).Encode(getHistory(m))
+}
 func TransferMoney(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/x-www-form-urlencode")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
