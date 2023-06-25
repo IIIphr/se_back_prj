@@ -61,3 +61,8 @@ type UpdateMoney struct {
 type Feedback struct {
 	Message string `json:"message" bson:"message"`
 }
+type MoneyTransfer struct {
+	User1 User `json:"user1" bson:"user1"`
+	User2 User `json:"user2" bson:"user2"`
+	Money int  `json:"money" bson:"money"`
+}

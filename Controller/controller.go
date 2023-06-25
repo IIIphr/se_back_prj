@@ -181,6 +181,26 @@ func insertFeedback(feedback Model.Feedback) {
 	}
 	fmt.Println("inserted feedback with id ", inserted.InsertedID, " into db")
 }
+func moneyTranster(m Model.MoneyTransfer) {
+	var res Model.User
+	filter2 := bson.M{"studentid": m.User1.StudentId, "universityid": m.User1.University}
+	userCollection.FindOne(context.Background(), filter2).Decode(&res)
+	//res.CurrentMoney -= result.Price
+	updateUserMoney(res, res.CurrentMoney-m.Money)
+	var res2 Model.User
+	filter3 := bson.M{"studentid": m.User2.StudentId, "universityid": m.User2.University}
+	userCollection.FindOne(context.Background(), filter3).Decode(&res2)
+	//res2.CurrentMoney += result.Price
+	updateUserMoney(res2, res2.CurrentMoney+m.Money)
+}
+func TransferMoney(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/x-www-form-urlencode")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Allow-Control-Allow-Methods", "POST")
+	var m Model.MoneyTransfer
+	_ = json.NewDecoder(r.Body).Decode(&m)
+	moneyTranster(m)
+}
 func GiveFeedback(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/x-www-form-urlencode")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
