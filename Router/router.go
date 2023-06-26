@@ -25,6 +25,6 @@ func Route() *mux.Router {
 	router.HandleFunc("/api/transfer-money", Controller.TransferMoney).Methods("POST")  //model =MoneyTransfer
 	router.HandleFunc("/api/history", Controller.History).Methods("POST")               //model =user (returns UserHistory)
 	router.HandleFunc("/api/get-universities", Controller.Universities).Methods("POST") //model =nothing (returns array of University)
-	router.HandleFunc("/api/get-universities", Controller.Canteens).Methods("POST")     //model =University (returns array of Canteen)
+	router.HandleFunc("/api/get-canteens", Controller.Canteens).Methods("POST")         //model =University (returns array of Canteen)
 	return router
 }
