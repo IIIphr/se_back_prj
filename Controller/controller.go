@@ -202,6 +202,54 @@ func getHistory(user Model.User) Model.UserHistory {
 	result.Coupons = result2.Coupons
 	return result
 }
+func getUniversities() []Model.University {
+	filter := bson.M{}
+	cursor, err := universityCollection.Find(context.TODO(), filter)
+	var entries []Model.University
+	if err != nil {
+		log.Fatal(err)
+	}
+	for cursor.Next(context.TODO()) {
+		var entry Model.University
+		if err := cursor.Decode(&entry); err != nil {
+			log.Fatal(err)
+		}
+
+		entries = append(entries, entry)
+	}
+	return entries
+}
+func getCanteens(Id string) []Model.Canteen {
+	filter := bson.M{"universityid": Id}
+	cursor, err := canteenCollection.Find(context.TODO(), filter)
+	var entries []Model.Canteen
+	if err != nil {
+		log.Fatal(err)
+	}
+	for cursor.Next(context.TODO()) {
+		var entry Model.Canteen
+		if err := cursor.Decode(&entry); err != nil {
+			log.Fatal(err)
+		}
+
+		entries = append(entries, entry)
+	}
+	return entries
+}
+func Canteens(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/x-www-form-urlencode")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Allow-Control-Allow-Methods", "POST")
+	var m Model.University
+	_ = json.NewDecoder(r.Body).Decode(&m)
+	json.NewEncoder(w).Encode(getCanteens(m.ID))
+}
+func Universities(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/x-www-form-urlencode")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Allow-Control-Allow-Methods", "POST")
+	json.NewEncoder(w).Encode(getUniversities())
+}
 func History(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/x-www-form-urlencode")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
