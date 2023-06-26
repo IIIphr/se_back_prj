@@ -51,10 +51,10 @@ func insertNewUser(user Model.User) {
 	fmt.Println("inserted user with id ", inserted.InsertedID, " into db")
 }
 func updateName(user Model.User) {
-	filter := bson.M{"_id": user.ID}
+	filter := bson.M{"studentid": user.StudentId, "universityid": user.University}
 	update := bson.M{"$set": bson.M{"firstname": user.FirstName}}
 	result, err := userCollection.UpdateOne(context.Background(), filter, update)
-	update2 := bson.M{"$set": bson.M{"firstname": user.FirstName}}
+	update2 := bson.M{"$set": bson.M{"lastname": user.LastName}}
 	result2, err2 := userCollection.UpdateOne(context.Background(), filter, update2)
 	if err != nil {
 		log.Fatal(err)
@@ -66,7 +66,7 @@ func updateName(user Model.User) {
 	fmt.Println("updated ", result2.ModifiedCount)
 }
 func updateUserPassword(user Model.User) {
-	filter := bson.M{"_id": user.ID}
+	filter := bson.M{"studentid": user.StudentId, "universityid": user.University}
 	update := bson.M{"$set": bson.M{"password": user.Password}}
 	result, err := userCollection.UpdateOne(context.Background(), filter, update)
 	if err != nil {
@@ -83,7 +83,7 @@ func insertNewCoupon(coupon Model.Coupon) {
 	fmt.Println("inserted coupon with id ", inserted.InsertedID, " into db")
 }
 func updateUserMoney(user Model.User, money int) {
-	filter := bson.M{"_id": user.ID}
+	filter := bson.M{"studentid": user.StudentId, "universityid": user.University}
 	update := bson.M{"$set": bson.M{"currentmoney": money}}
 	result, err := userCollection.UpdateOne(context.Background(), filter, update)
 	if err != nil {
