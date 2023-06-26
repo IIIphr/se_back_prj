@@ -372,11 +372,15 @@ func FindCodes(w http.ResponseWriter, r *http.Request) {
 	}
 	sort.Sort(ByPrice(coupons))
 	var response []Model.Coupon
-	response = append(response, coupons[0])
-	response = append(response, coupons[1])
-	response = append(response, coupons[2])
-	response = append(response, coupons[3])
-	response = append(response, coupons[4])
+	if len(coupons) < 5 {
+		response = append(response, coupons...)
+	} else {
+		response = append(response, coupons[0])
+		response = append(response, coupons[1])
+		response = append(response, coupons[2])
+		response = append(response, coupons[3])
+		response = append(response, coupons[4])
+	}
 	json.NewEncoder(w).Encode(response)
 }
 
